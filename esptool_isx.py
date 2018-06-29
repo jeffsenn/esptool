@@ -1,3 +1,4 @@
+from __future__ import division, print_function
 import sys
 import time
 
@@ -13,6 +14,10 @@ class ISXSerial:
         self.noseqnum = False
         self.syncbuf = False
         self.reseti()
+        self.closed = False
+
+    def close(self):
+        self.closed = True
         
     def reseti(self):
         self.in_state = {}
@@ -85,7 +90,7 @@ class ISXSerial:
         while self.stackstate == 0: # wait for reset/module detect
             self.write_some()
             time.sleep(0.1)
-        print("--ISX:FOUND MODULE",self.found,"---")
+        print("---ISX:FOUND MODULE",self.found,"---")
 
     # return (or create) selected terms list for m
     def get_selected(self,m):
@@ -209,7 +214,7 @@ class ISXSerial:
                     
 
     def read_thread(self):
-      while 1:
+      while not self.closed:
         ret = None
         try:
             ret = self.iep.read(64,10000000) # functionally infinite timeout
