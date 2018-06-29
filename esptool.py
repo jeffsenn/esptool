@@ -36,6 +36,12 @@ import serial.tools.list_ports as list_ports
 
 import serial
 
+try:
+    import esptool_isx
+    esptool_isx.patch_serial_for_url(serial)
+except:
+    print("Could not load ESPTOOL_ISX")
+    
 # check 'serial' is 'pyserial' and not 'serial' https://github.com/espressif/esptool/issues/269
 try:
     if "serialization" in serial.__doc__ and "deserialization" in serial.__doc__:
