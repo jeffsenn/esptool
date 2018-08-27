@@ -6,7 +6,7 @@ import time
 class ISXSerial:
     def __init__(self,arg):
         # split args to get UUIDs valid for programming
-        self.module_uuids = arg.split(",")
+        self.module_uuids = arg.upper().split(",")
         self.dtr = 0
         self.inbuf = ''
         self.outbuf = ''
@@ -199,7 +199,8 @@ class ISXSerial:
         #print("MSG",ky,msg, repr(rmsg))
         if self.stackstate == 0: # wait for stack enum
             if ky.endswith(":0") and type(msg) == type([]) and len(msg) == 2 and msg[0] == 'T':
-                if msg[1].toString() in self.module_uuids:
+                print("looking",msg[1].toString(), self.module_uuids)
+                if msg[1].toString().upper() in self.module_uuids:
                     self.found = int(ky[0]) # found the module!
             if msg == []:
                 self.outbuf += "\xfe"+chr(self.found) # select module
